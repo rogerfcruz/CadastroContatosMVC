@@ -1,5 +1,6 @@
 ﻿using CadastroContatosMVC.Data;
 using CadastroContatosMVC.Models;
+using CadastroContatosMVC.Services.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
@@ -29,14 +30,33 @@ namespace CadastroContatosMVC.Services
         }
         public void Remove(int id)
         {
-            var obj = _context.Contato.Find(id);
-            _context.Contato.Remove(obj);
-            _context.SaveChanges();
+            try
+            {
+                var obj = _context.Contato.Find(id);
+                _context.Contato.Remove(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
         }
         public void Update(Contato obj)
         {
-            _context.Update(obj);
-            _context.SaveChanges();
+            if (!_context.Contato.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundException("Id não encontrado!");
+            }
+
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
         }
     }
 }
