@@ -1,0 +1,36 @@
+﻿@model CadastroContatosMVC.Models.Contato
+
+@{
+    ViewData["Title"] = "Criar Novo";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>Contato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Nome" class="control-label">Nome</label>
+                <input asp-for="@Model.Nome" class="form-control" placeholder="Informe seu nome" />
+                <span asp-validation-for="@Model.Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Email" class="control-label">Email</label>
+                <input asp-for="@Model.Email" class="form-control" placeholder="Informe seu e-mail" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Telefone" class="control-label">Telefone</label>
+                <input asp-for="@Model.Telefone" class="form-control" placeholder="Informe seu telefone"/>
+                <span asp-validation-for="@Model.Telefone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-success" />
+                <a class="btn btn-default" asp-controller="Contato" asp-action="Index" role="button" >Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿@model CadastroContatosMVC.Models.Contato
+
+@{
+    ViewData["Title"] = "Apagar";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Deseja realmente apagar o contato?</h3>
+
+<div>
+    <h4>Contato</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Telefone)
+        </dd>
+    </dl>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="btn btn-default" asp-controller="Contato" asp-action="Index" role="button">Cancelar</a>
+    </form>
+</div>
