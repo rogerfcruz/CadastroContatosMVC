@@ -7,12 +7,10 @@ namespace CadastroContatosMVC.Data
     public class SeedingService
     {
         private CadastroContatosMVCContext _context;
-
         public SeedingService(CadastroContatosMVCContext context)
         {
             _context = context;
         }
-
         public void Seed()
         {
             if (_context.Contato.Any())

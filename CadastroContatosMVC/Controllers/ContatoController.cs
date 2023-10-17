@@ -1,6 +1,7 @@
 ﻿using CadastroContatosMVC.Models;
 using CadastroContatosMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CadastroContatosMVC.Controllers
 {
@@ -18,7 +19,8 @@ namespace CadastroContatosMVC.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            var contatos = _contatoService.FindAll();
+            return View(contatos);
         }
 
         [HttpPost]
@@ -28,13 +30,31 @@ namespace CadastroContatosMVC.Controllers
             _contatoService.Insert(contato);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Edit()
+        public IActionResult Edit(int? id)
         {
-            return View();
+            var contato = _contatoService.FindById(id.Value);
+            return View(contato);
         }
-        public IActionResult Delete()
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Contato contato) 
         {
-            return View();
+            _contatoService.Update(contato);
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Delete(int? id)
+        {
+            var obj = _contatoService.FindById(id.Value);
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _contatoService.Remove(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
