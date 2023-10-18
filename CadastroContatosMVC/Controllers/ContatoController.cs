@@ -1,6 +1,8 @@
 ﻿using CadastroContatosMVC.Models;
+using CadastroContatosMVC.Models.ViewModels;
 using CadastroContatosMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace CadastroContatosMVC.Controllers
@@ -19,29 +21,57 @@ namespace CadastroContatosMVC.Controllers
         }
         public IActionResult Create()
         {
-            var contatos = _contatoService.FindAll();
-            return View(contatos);
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Contato contato)
         {
-            _contatoService.Insert(contato);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var viewModel = new ContatoFormViewModel { Contato = contato };
+                    return View(viewModel);
+                }
+                _contatoService.Insert(contato);
+                TempData["MensagemSucesso"] = "Contato cadastrado com sucesso!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception erro)
+            {
+                TempData["MensagemErro"] = $"Erro ao cadastrar o contato. Detalhe do erro: {erro.Message}";
+                return RedirectToAction("Index");
+            }
         }
         public IActionResult Edit(int? id)
         {
             var contato = _contatoService.FindById(id.Value);
-            return View(contato);
+            ContatoFormViewModel viewModel = new ContatoFormViewModel { Contato = contato };
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Contato contato) 
         {
-            _contatoService.Update(contato);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var viewModel = new ContatoFormViewModel { Contato = contato };
+                    return View(viewModel);
+                }
+                _contatoService.Update(contato);
+                TempData["MensagemSucesso"] = "Contato alterado com sucesso!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception erro)
+            {
+                TempData["MensagemErro"] = $"Erro ao atualizar o contato. Detalhe do erro: {erro.Message}";
+                return RedirectToAction("Index");
+            }
         }
         public IActionResult Delete(int? id)
         {
@@ -53,8 +83,17 @@ namespace CadastroContatosMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            _contatoService.Remove(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _contatoService.Remove(id);
+                TempData["MensagemSucesso"] = "Contato apagado com sucesso!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception erro)
+            {
+                TempData["MensagemErro"] = $"Erro a apagar o contato. Detalhe do erro: {erro.Message}";
+                return RedirectToAction("Index");
+            }
         }
     }
 }
